@@ -1,4 +1,5 @@
 from math import floor
+from operator import mod
 
 
 class Solution:
@@ -31,9 +32,6 @@ class Solution:
                 return True
             else: return False
         
-#         def thisLessThanNextFromSeqNumber():
-#             # if  modNum >= seq[i] - seq[i+1]
-            
         
         def digitsAreSameLength(i:int, *seq) -> bool:
            
@@ -51,30 +49,33 @@ class Solution:
             else:
                 print ("digitsAreSameLength else: "+str(len(str(seq[i]))) +" "+ str(len(str(seq[i+1]))))
                 return False
-        
-        def roman (quotient: int, seqNumber: int, seqPosition: int, modNum: int, *args) -> str:
-            
-            if (modNum - seqNumber) < 0:
-                return ''   
-            
-            ret = ''
-            numeral = convert(seqNumber)
-            
-            if seqPosition == len(seq)-1:
-                print("on 1s")
-            elif seqPosition > 0: 
-                if (numeralsShouldBeSwitched(modNum, seqPosition)):
-                    return convert(seq[seqPosition+1])+convert(seq[seqPosition-1])
-            else: # executes on 1000s only
-                return numeral*int(quotient)
-            
+             
         
         i = 0
         for i in range(len(seq)-1):
             
-            quotient = floor(modNum / seq[i])
+            quotient = floor(modNum / seq[i]) 
             
-            ret += str(roman(quotient, seq[i], i, modNum, seq))
+            numeral = convert(seq[i])
+
+            if modNum < seq[i]:
+                print('do nothing. modNum ' + str(modNum))
+            elif i == 0:
+                ret += numeral*int(quotient)
+                modNum %= 1000
+            elif modNum >= 50 and modNum < 90:
+                ret += 'L'
+                modNum %= 50
+            elif modNum >= 500 and modNum < 900:
+                ret += 'D'
+                modNum %= 500
+            elif i == len(seq)-1:
+                print("on 1s")
+            elif i > 0: 
+                if (numeralsShouldBeSwitched(modNum, i)):
+                    ret += convert(seq[i+1])+convert(seq[i])
+                else:
+                    ret += numeral*int(quotient)
             
             if digitsAreSameLength(i, seq) and modNum >= seq[i] - seq[i+1]:
                 # i.e. modNum = 999. only 500 is subtracted instead of 900
@@ -90,22 +91,7 @@ class Solution:
                 print()
             if (modNum == 0):
                 return ret
-                
-# #         handle 1000 separately
-#         if ones == 1:
-#             ret += "I"
-#         elif ones == 2:
-#             ret += "II"
-#         elif ones == 3:
-#             ret = ret + "III"
-#         elif ones == 0:
-#             ret += ""
-#         elif ones == 4:
-#             behind = True
 
         return(ret)
-        
-        # Ms = num / 1000
-        # ret += Ms
         
         
