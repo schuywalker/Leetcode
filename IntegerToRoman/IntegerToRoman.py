@@ -1,3 +1,6 @@
+from math import floor
+
+
 class Solution:
     def intToRoman(self, num: int) -> str:
         
@@ -65,7 +68,6 @@ class Solution:
             else: # executes on 1000s only
                 return numeral*int(quotient)
             
-        
         
         i = 0
         for i in range(len(seq)-1):
