@@ -28,7 +28,11 @@ class Solution:
                 return 'M'
             
         def numeralsShouldBeSwitched(modNum:int, seqPosition:int) -> bool:
-            if ((modNum != seq[seqPosition]) and (modNum+seq[seqPosition+1] >= seq[seqPosition])):
+            
+            if ((modNum != seq[seqPosition]) and (seqPosition < len(seq)-1) and 
+                (modNum + nextPrecursor(seq[seqPosition]) >= seq[seqPosition])):
+                
+                print(f" YOOOO ({modNum}+{nextPrecursor(seq[seqPosition])} >= {seq[seqPosition]})")
                 return True
             else: return False
         
@@ -51,16 +55,25 @@ class Solution:
                 return False
              
         def findNextPrecursor(i:int, seq) -> int:
-            ret = 0
-            print(seq[i])
-            if seq[i] == 1:
+            answer = 0
+            print("seq[i] in precursor",seq[i])
+            if i == (len(seq)-1):
+                print('findNext called on I')
                 return 0
             else :
-                for x in range(i,len(seq)-1):
-                    ret = ret + 1
+                for x in range(i,len(seq)):
+                    ++answer
                     if seq[x] % 10 == 0 or seq[x] == 1:
-                        return ret
+                        return answer
+                    
             return 0
+        
+        def nextPrecursor(seqNumber: int) -> int:
+            if seqNumber > 100:
+                return 100
+            elif seqNumber > 10:
+                return 10
+            else: return 1
         
         i = 0
         for i in range(len(seq)):
@@ -83,14 +96,16 @@ class Solution:
             # elif i == len(seq)-1:
             #     print("on 1s")
             else: 
-                if (i < len(seq) and numeralsShouldBeSwitched(modNum, i)):
+                if (i < len(seq)-1 and numeralsShouldBeSwitched(modNum, i)):
                     
-                    amount = findNextPrecursor(i, seq)
-                    
-                    ret += convert(seq[i+amount])+convert(seq[i])
+                    precursorNum = nextPrecursor(seq[i])
+                    print ("precursorNum",precursorNum)
+                    ret += convert(precursorNum)+convert(seq[i])
                     print("FOR if. modNum:",modNum," on: ",seq[i],)
-                    modNum %= seq[i+1]
-                    print(quotient)
+                    print("subtracting: ",seq[i+precursorNum] * (modNum / seq[i+precursorNum]))
+                    modNum -= precursorNum * (modNum / precursorNum)
+                    
+                    print("quotient",quotient)
                     # i = i+1
                     print("After ++i and modNum mod. on:",modNum," seqNumber: ",seq[i])
                 else:
@@ -99,8 +114,8 @@ class Solution:
                     modNum %= seq[i]
                     print("After ++i and modNum mod modNum:", modNum, " seqNumber: ", seq[i])
             
-            print(ret)
-            
+            print("ret = ",ret)
+            print()
             # if digitsAreSameLength(i, seq) and modNum >= seq[i] - seq[i+1]:
             #     # i.e. modNum = 999. only 500 is subtracted instead of 900
             #     print("FOR if. modNum:" + str(modNum) + " seqNumber: " + str(seq[i]))
